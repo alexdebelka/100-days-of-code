@@ -3,7 +3,7 @@ def main():
     height=float(input("What is your height?\n"))
     return weight, height
 def calculaate_bmi(weight, height):
-    bmi= weight/(height*height)
+    bmi= weight/(height*height) *10000
     return bmi
 x,y= main()
 z= calculaate_bmi(x,y)
