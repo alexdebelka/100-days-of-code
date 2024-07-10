@@ -13,3 +13,7 @@ quiz= QuizBrain(question_bank)
 
 while quiz.still_has_question():
     quiz.next_question
+
+if quiz.question_number==len(quiz.question_list):
+    print("You have completed all the answers!")
+    print(f"Your final score is {quiz.score}")
