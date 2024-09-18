@@ -14,9 +14,9 @@ def generate_certificate_image(name, cert_number, period, template_path, output_
     draw = ImageDraw.Draw(image)
 
     # Load the custom fonts (Arial used here, but you can replace with Times New Roman if needed)
-    font_name = ImageFont.truetype("Arial.ttf", 150)  # Font for name
-    font_period = ImageFont.truetype("Arial.ttf", 50)  # Font for the period and date
-    font_small = ImageFont.truetype("Arial.ttf", 50)  # Font for the certificate number
+    font_name = ImageFont.truetype("./Arial.ttf", 150)  # Font for name
+    font_period = ImageFont.truetype("./Arial.ttf", 50)  # Font for the period and date
+    font_small = ImageFont.truetype("./Arial.ttf", 50)  # Font for the certificate number
 
     # Get the current date
     issue_date = datetime.now().strftime("%d/%m/%Y")
