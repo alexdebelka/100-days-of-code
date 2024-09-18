@@ -14,9 +14,9 @@ def generate_certificate_image(name, cert_number, period, template_path, output_
     draw = ImageDraw.Draw(image)
 
     # Load the custom fonts (Arial used here, but you can replace with Times New Roman if needed)
-    font_name = ImageFont.truetype("./streamlit-unicert-certificate/Arial.ttf", 150)  # Font for name
-    font_period = ImageFont.truetype("./streamlit-unicert-certificate/Arial.ttf", 50)  # Font for the period and date
-    font_small = ImageFont.truetype("./streamlit-unicert-certificate/Arial.ttf", 50)  # Font for the certificate number
+    font_name = ImageFont.truetype("./Arial.ttf", 150)  # Font for name
+    font_period = ImageFont.truetype("./Arial.ttf", 50)  # Font for the period and date
+    font_small = ImageFont.truetype("./Arial.ttf", 50)  # Font for the certificate number
 
     # Get the current date
     issue_date = datetime.now().strftime("%d/%m/%Y")
@@ -120,28 +120,35 @@ def main():
         os.makedirs(output_path, exist_ok=True)
         current_number = start_number
 
+        # A list to hold generated PDFs for download
+        generated_pdfs = []
+
         # Loop through the dataframe and generate certificates
         for index, row in df.iterrows():
             name = row['name']
             period = row['period']
             cert_number = generate_cert_number(current_number)
             pdf_file = generate_certificate_image(name, cert_number, period, template_path, output_path)
-            st.write(f"Generated: {pdf_file}")  # Display the path of the PDF
-            current_number += 1
 
-        with open(pdf_file, "rb") as pdf:
-            st.download_button(
-                label=f"Download {name}'s Certificate",
-                data=pdf,
-                file_name=f"{name}_Certificat_{cert_number}.pdf",
-                mime="application/pdf"
-            )
-        current_number += 1
+            # Store the generated PDF for download
+            generated_pdfs.append((name, pdf_file))
+
+            current_number += 1
 
         # Save the last certificate number
         save_last_cert_number(current_number - 1)
 
         st.success(f"Certificates generated and saved to {output_path}.")
+
+        # Display download buttons for all generated PDFs
+        for name, pdf_file in generated_pdfs:
+            with open(pdf_file, "rb") as pdf:
+                st.download_button(
+                    label=f"Download {name}'s Certificate",
+                    data=pdf,
+                    file_name=f"{name}_Certificat_{cert_number}.pdf",
+                    mime="application/pdf"
+                )
 
 if __name__ == "__main__":
     main()
