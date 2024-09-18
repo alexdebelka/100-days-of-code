@@ -129,6 +129,15 @@ def main():
             st.write(f"Generated: {pdf_file}")  # Display the path of the PDF
             current_number += 1
 
+        with open(pdf_file, "rb") as pdf:
+            st.download_button(
+                label=f"Download {name}'s Certificate",
+                data=pdf,
+                file_name=f"{name}_Certificat_{cert_number}.pdf",
+                mime="application/pdf"
+            )
+        current_number += 1
+
         # Save the last certificate number
         save_last_cert_number(current_number - 1)
 
