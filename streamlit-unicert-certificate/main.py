@@ -4,6 +4,8 @@ from PIL import Image, ImageDraw, ImageFont
 from fpdf import FPDF
 from datetime import datetime
 import os
+import zipfile
+from io import BytesIO
 
 # Function to generate a certificate with an image background using fixed positions and centered text
 def generate_certificate_image(name, cert_number, period, template_path, output_path):
@@ -94,6 +96,15 @@ def load_last_cert_number():
     except FileNotFoundError:
         return 1  # Start with 1 if not found
 
+# Function to create a zip file of generated PDFs
+def create_zip_of_pdfs(generated_pdfs):
+    memory_zip = BytesIO()
+    with zipfile.ZipFile(memory_zip, "w") as zf:
+        for name, pdf_file in generated_pdfs:
+            zf.write(pdf_file, os.path.basename(pdf_file))
+    memory_zip.seek(0)
+    return memory_zip
+
 # Streamlit app
 def main():
     st.title("Certificate Generator")
@@ -120,7 +131,7 @@ def main():
         os.makedirs(output_path, exist_ok=True)
         current_number = start_number
 
-        # A list to hold generated PDFs for download
+        # A list to hold generated PDFs for the zip file
         generated_pdfs = []
 
         # Loop through the dataframe and generate certificates
@@ -130,7 +141,7 @@ def main():
             cert_number = generate_cert_number(current_number)
             pdf_file = generate_certificate_image(name, cert_number, period, template_path, output_path)
 
-            # Store the generated PDF for download
+            # Store the generated PDF for the zip file
             generated_pdfs.append((name, pdf_file))
 
             current_number += 1
@@ -140,15 +151,16 @@ def main():
 
         st.success(f"Certificates generated and saved to {output_path}.")
 
-        # Display download buttons for all generated PDFs
-        for name, pdf_file in generated_pdfs:
-            with open(pdf_file, "rb") as pdf:
-                st.download_button(
-                    label=f"Download {name}'s Certificate",
-                    data=pdf,
-                    file_name=f"{name}_Certificat_{cert_number}.pdf",
-                    mime="application/pdf"
-                )
+        # Create a zip file containing all generated PDFs
+        zip_file = create_zip_of_pdfs(generated_pdfs)
+
+        # Provide a download button for the zip file
+        st.download_button(
+            label="Download All Certificates as ZIP",
+            data=zip_file,
+            file_name="certificates.zip",
+            mime="application/zip"
+        )
 
 if __name__ == "__main__":
     main()
