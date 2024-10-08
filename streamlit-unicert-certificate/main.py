@@ -112,7 +112,7 @@ def main():
     # Step 1: Upload the certificate template
     template_file = st.file_uploader("Upload Certificate Template (PNG)", type=["png"])
     if template_file:
-        template_path = "gg-cert.png"
+        template_path = "unicert_certificate_v3.png"
         with open(template_path, "wb") as f:
             f.write(template_file.getbuffer())
 
