@@ -126,9 +126,9 @@ def main():
     st.write(f"Starting certificate number: {start_number}")
     
     # Add a reset button to reset the certificate number to 101
-    if st.button("Reset Starting Certificate Number to 939"):
-        save_last_cert_number(939)
-        st.success("Starting Certificate number reset to 939. Trimite mesaj daca merge")
+    if st.button("Reset Starting Certificate Number to 1002"):
+        save_last_cert_number(1002)
+        st.success("Starting Certificate number reset to 1002. Trimite mesaj daca merge")
 
     # Step 4: Generate certificates when the button is clicked
     if st.button("Generate Certificates"):
